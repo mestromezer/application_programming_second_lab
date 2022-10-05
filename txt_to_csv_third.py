@@ -6,40 +6,40 @@ from random import Random, random
 
 class Comment:
 
-    def __init__(self): #по умолчанию
+    def __init__(self):  # по умолчанию
         self.name = None
         self.comment = None
         self.mark = None
-   
-   
+
+
 def create_repo():
     os.mkdir("dataset_copy")
-    for i in range(1,6):
+    for i in range(1, 6):
         os.mkdir("dataset_copy/"+str(i))
-        
+
 
 def save_comments(data, filename):
-    
-    for i in range(1,len(data)):
-        
+
+    for i in range(1, len(data)):
+
         used_digits = [0]
         random = Random()
         digit = 0
-        
+
         while digit in used_digits:
-            digit = random.randint(1,10000)
-            
+            digit = random.randint(1, 10000)
+
         file = open(filename+f'\\{digit:04}'+'.txt', "w", encoding="utf-8")
         file.write(data[i].name)
         file.write('\n')
         file.write(data[i].comment)
         file.close
-        
+
         used_digits.append(digit)
-        
+
 
 def write_dataset(dataset):
-    
+
     one_data = [el for el in dataset if el.mark < 2.0]
     save_comments(one_data, "dataset_copy\\1")
 
@@ -54,8 +54,8 @@ def write_dataset(dataset):
 
     five_data = [el for el in dataset if el.mark == 5.0]
     save_comments(five_data, "dataset_copy\\5")
-      
-        
+
+
 def create_copy(path):
     dataset = get_dataset(path)
     create_repo()
@@ -63,86 +63,90 @@ def create_copy(path):
 
 
 def get_dataset(path):
-    dataset=list()
-    for folder_num in range(1,6):
-        
+    dataset = list()
+    for folder_num in range(1, 6):
+
         folder_path = path+'\\'+str(folder_num)
-        num_of_files = sum(os.path.isfile(os.path.join(folder_path, f)) for f in os.listdir(folder_path)) + 1
-        
-        for file_num in range(1,num_of_files):
+        num_of_files = sum(os.path.isfile(os.path.join(folder_path, f))
+                           for f in os.listdir(folder_path)) + 1
+
+        for file_num in range(1, num_of_files):
             path_to_file = folder_path+f'/{(file_num):04}'+'.txt'
-            
+
             try:
                 file = open(path_to_file, 'r', encoding='utf-8')
                 print(f'{folder_num} : {(file_num):04}')
             except Exception as e:
-                    print(e.args)
-                    
+                print(e.args)
+
             comment = Comment()
             buffer_comment_text = ""
             line_counter = 0
             while True:
-                
+
                 line = file.readline()
-                
+
                 if not line:
                     try:
                         file.close()
                     except Exception as e:
                         print(e.args)
                     break
-                
-                if line_counter == 0 : comment.name = line
-                else : buffer_comment_text+=line
-                
+
+                if line_counter == 0:
+                    comment.name = line
+                else:
+                    buffer_comment_text += line
+
                 line_counter += 1
-            
+
             buffer_comment_text = buffer_comment_text.replace(u'\xa0', u' ')
-                
+
             comment.mark = folder_num
             comment.comment = buffer_comment_text.strip()
-            
+
             dataset.append(comment)
-            
+
     return dataset
 
 
 def get_paths_to_files(path_to_dataset):
-    
+
     paths_to_files = list()
-    
-    for folder_num in range(1,6):
+
+    for folder_num in range(1, 6):
         folder_path = path_to_dataset+'\\'+str(folder_num)
         #num_of_files = sum(os.path.isfile(os.path.join(folder_path, f)) for f in os.listdir(folder_path)) + 1
-                
+
         currentDirectory = pathlib.Path('./dataset_copy'+f'/{folder_num}')
-        for currentFile in currentDirectory.iterdir(): 
+        for currentFile in currentDirectory.iterdir():
             print(currentFile)
             paths_to_files.append(currentFile)
-            
+
     return paths_to_files
 
 
 def write_as_csv(path_to_dataset, paths_to_files):
-    
-    with open("dataset_csv_first.csv", "w+", encoding='utf-8', newline='') as file:
-        csv_file = csv.writer(file ,delimiter=';')
-        csv_file.writerow(["Absolute path","Relative path","Class"])
-    
-        for i in range(0,len(paths_to_files)):
-            paths_to_files[i] = str(paths_to_files[i])
-            csv_file.writerow([f'{path_to_dataset + paths_to_files[i]}', paths_to_files[i] ,os.path.basename(paths_to_files[i])])
-    
 
-if __name__=='__main__':
+    with open("dataset_csv_third.csv", "w+", encoding='utf-8', newline='') as file:
+        csv_file = csv.writer(file, delimiter=';')
+        csv_file.writerow(["Absolute path", "Relative path", "Class"])
+
+        for i in range(0, len(paths_to_files)):
+            paths_to_files[i] = str(paths_to_files[i])
+            csv_file.writerow([f'{path_to_dataset + paths_to_files[i]}',
+                              paths_to_files[i], os.path.basename(paths_to_files[i])])
+
+
+if __name__ == '__main__':
 
     path = 'C:/application_programming/first_lab/dataset'
 
     create_copy(path)
-    
+
     path_to_dataset = os.path.abspath(".\\dataset_copy")
     paths_to_files = get_paths_to_files(path_to_dataset)
-    
+
     write_as_csv(path_to_dataset, paths_to_files)
 
     print("Работа окончена")
