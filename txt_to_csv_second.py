@@ -1,19 +1,41 @@
 import csv
 import os
+import shutil
 
 
 def write_as_csv(path_to_dataset, paths_to_files):
 
-    with open("dataset_csv_second.csv", "w+", encoding='utf-8', newline='') as file:
+    with open("dataset_csv_first.csv", "w+", encoding='utf-8', newline='') as file:
         csv_file = csv.writer(file, delimiter=';')
         csv_file.writerow(["Absolute path", "Relative path", "Class"])
-        shift = -9
 
-        for i in range(0, len(paths_to_files)):
-            paths_to_files[i] = paths_to_files[i][0:shift] + \
-                "_" + paths_to_files[i][shift+1:]
-            csv_file.writerow([f'{path_to_dataset+paths_to_files[i]}',
-                              f'../dataset{paths_to_files[i]}', f'{paths_to_files[i][1]}'])
+        for path in paths_to_files:
+            path = path[0:2] + '_' + path[3:] #raplce / with _
+            csv_file.writerow([f'{path_to_dataset+path}',
+                              f'../application_programming_first_lab_and_dataset/dataset{path}', f'{path[1]}'])
+
+
+def mk_newdataset(nd_path):
+    os.mkdir(nd_path)
+
+
+def copy_dataset(path_to_dataset):
+
+    nd_path='./new_dataset'
+    mk_newdataset(nd_path)
+
+    for folder_num in range(1,6):
+
+        folder_path = path_to_dataset+'/'+str(folder_num) #path to current folder (mark 1-5)
+
+        num_of_files = sum(os.path.isfile(os.path.join(folder_path, f)) #amount of files in current folder
+                           for f in os.listdir(folder_path)) + 1
+
+        for file_num in range(0, (num_of_files - 1)):
+            shutil.copy(folder_path+f"/{(file_num+1):04}.txt", nd_path) #rewrite
+            os.rename(f"./new_dataset/{(file_num+1):04}.txt", f"./new_dataset/{folder_num}_{(file_num+1):04}.txt") #rename
+    
+    return nd_path
 
 
 def get_paths_to_files(path_to_dataset):
@@ -35,9 +57,11 @@ def get_paths_to_files(path_to_dataset):
 
 if __name__ == '__main__':
 
-    path_to_dataset = os.path.abspath("../first_lab/dataset")
+    path_to_dataset = os.path.abspath("../application_programming_first_lab_and_dataset/dataset")
     paths_to_files = get_paths_to_files(path_to_dataset)
 
-    write_as_csv(path_to_dataset, paths_to_files)
+    new_dataset_path = copy_dataset(path_to_dataset)
+
+    write_as_csv(new_dataset_path, paths_to_files)
 
     print("Работа окончена")
