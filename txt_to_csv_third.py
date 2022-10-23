@@ -29,7 +29,7 @@ def save_comments(data, filename):
         while digit in used_digits:
             digit = random.randint(1, 10000)
 
-        file = open(filename+f'\\{digit:04}'+'.txt', "w", encoding="utf-8")
+        file = open(filename+f'/{digit:04}'+'.txt', "w", encoding="utf-8")
         file.write(data[i].name)
         file.write('\n')
         file.write(data[i].comment)
@@ -41,19 +41,19 @@ def save_comments(data, filename):
 def write_dataset(dataset):
 
     one_data = [el for el in dataset if el.mark < 2.0]
-    save_comments(one_data, "dataset_copy\\1")
+    save_comments(one_data, "dataset_copy/1")
 
     two_data = [el for el in dataset if el.mark < 3.0 and el.mark >= 2.0]
-    save_comments(two_data, "dataset_copy\\2")
+    save_comments(two_data, "dataset_copy/2")
 
     three_data = [el for el in dataset if el.mark < 4.0 and el.mark >= 3.0]
-    save_comments(three_data, "dataset_copy\\3")
+    save_comments(three_data, "dataset_copy/3")
 
     four_data = [el for el in dataset if el.mark < 5.0 and el.mark >= 4.0]
-    save_comments(four_data, "dataset_copy\\4")
+    save_comments(four_data, "dataset_copy/4")
 
     five_data = [el for el in dataset if el.mark == 5.0]
-    save_comments(five_data, "dataset_copy\\5")
+    save_comments(five_data, "dataset_copy/5")
 
 
 def create_copy(path):
@@ -66,7 +66,7 @@ def get_dataset(path):
     dataset = list()
     for folder_num in range(1, 6):
 
-        folder_path = path+'\\'+str(folder_num)
+        folder_path = path+'/'+str(folder_num)
         num_of_files = sum(os.path.isfile(os.path.join(folder_path, f))
                            for f in os.listdir(folder_path)) + 1
 
@@ -115,7 +115,7 @@ def get_paths_to_files(path_to_dataset):
     paths_to_files = list()
 
     for folder_num in range(1, 6):
-        folder_path = path_to_dataset+'\\'+str(folder_num)
+        folder_path = path_to_dataset+'/'+str(folder_num)
         #num_of_files = sum(os.path.isfile(os.path.join(folder_path, f)) for f in os.listdir(folder_path)) + 1
 
         currentDirectory = pathlib.Path('./dataset_copy'+f'/{folder_num}')
@@ -140,13 +140,13 @@ def write_as_csv(path_to_dataset, paths_to_files):
 
 if __name__ == '__main__':
 
-    path = 'C:/application_programming/first_lab/dataset'
+    path_to_dataset = os.path.abspath("../application_programming_first_lab_and_dataset/dataset")
 
-    create_copy(path)
+    create_copy(path_to_dataset)
 
-    path_to_dataset = os.path.abspath(".\\dataset_copy")
-    paths_to_files = get_paths_to_files(path_to_dataset)
+    path_new_dataset = os.path.abspath("./dataset_copy")
+    paths_to_files = get_paths_to_files(path_new_dataset)
 
-    write_as_csv(path_to_dataset, paths_to_files)
+    write_as_csv(path_new_dataset, paths_to_files)
 
     print("Работа окончена")
