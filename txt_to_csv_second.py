@@ -3,8 +3,13 @@ import os
 import shutil
 
 
-def write_as_csv(path_to_dataset, paths_to_files):
+def write_as_csv(path_to_dataset: str, paths_to_files: str):
+    """Writes as CSV 
 
+    Args:
+        path_to_dataset (_type_): path to source
+        paths_to_files (_type_): content from source
+    """
     with open("dataset_csv_first.csv", "w+", encoding='utf-8', newline='') as file:
         csv_file = csv.writer(file, delimiter=';')
         csv_file.writerow(["Absolute path", "Relative path", "Class"])
@@ -15,12 +20,24 @@ def write_as_csv(path_to_dataset, paths_to_files):
                               f'../application_programming_first_lab_and_dataset/dataset{path}', f'{path[1]}'])
 
 
-def mk_newdataset(nd_path):
+def mk_newdataset(nd_path: str):
+    """creates new dataset
+
+    Args:
+        nd_path (_type_): new dataset's path
+    """
     os.mkdir(nd_path)
 
 
-def copy_dataset(path_to_dataset):
+def copy_dataset(path_to_dataset: str) -> str:
+    """Copies dataset to the new direct
 
+    Args:
+        path_to_dataset (str): Path to old one
+
+    Returns:
+        str: Path to the new one
+    """
     nd_path='./new_dataset'
     mk_newdataset(nd_path)
 
@@ -38,8 +55,15 @@ def copy_dataset(path_to_dataset):
     return nd_path
 
 
-def get_paths_to_files(path_to_dataset):
+def get_paths_to_files(path_to_dataset: str) -> str:
+    """Gets paths to files from dataset
 
+    Args:
+        path_to_dataset (str): Path to get files from
+
+    Returns:
+        str: List of paths
+    """
     paths_to_files = list()
 
     for folder_num in range(1, 6):

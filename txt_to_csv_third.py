@@ -13,13 +13,20 @@ class Comment:
 
 
 def create_repo():
+    """Creates repository in current folder
+    """
     os.mkdir("dataset_copy")
     for i in range(1, 6):
         os.mkdir("dataset_copy/"+str(i))
 
 
-def save_comments(data, filename):
+def save_comments(data: Comment, foldername: str):
+    """Saves comments give
 
+    Args:
+        data (Comment):  List of comments
+        foldername (str): filename
+    """
     for i in range(1, len(data)):
 
         used_digits = [0]
@@ -29,7 +36,7 @@ def save_comments(data, filename):
         while digit in used_digits:
             digit = random.randint(1, 10000)
 
-        file = open(filename+f'/{digit:04}'+'.txt', "w", encoding="utf-8")
+        file = open(foldername+f'/{digit:04}'+'.txt', "w", encoding="utf-8")
         file.write(data[i].name)
         file.write('\n')
         file.write(data[i].comment)
@@ -38,8 +45,12 @@ def save_comments(data, filename):
         used_digits.append(digit)
 
 
-def write_dataset(dataset):
+def write_dataset(dataset: str):
+    """Writes dataset
 
+    Args:
+        dataset (str): New dataset's path
+    """
     one_data = [el for el in dataset if el.mark < 2.0]
     save_comments(one_data, "dataset_copy/1")
 
@@ -56,13 +67,26 @@ def write_dataset(dataset):
     save_comments(five_data, "dataset_copy/5")
 
 
-def create_copy(path):
+def create_copy(path: str):
+    """Creates copy of dataset
+
+    Args:
+        path (str): Path to dataset
+    """
     dataset = get_dataset(path)
     create_repo()
     write_dataset(dataset)
 
 
-def get_dataset(path):
+def get_dataset(path: str) -> Comment:
+    """Reads all data from dataset and returns it as Comment class's ocjects
+
+    Args:
+        path (str): path to dataset
+
+    Returns:
+        Comment: List of comments
+    """
     dataset = list()
     for folder_num in range(1, 6):
 
@@ -110,8 +134,15 @@ def get_dataset(path):
     return dataset
 
 
-def get_paths_to_files(path_to_dataset):
+def get_paths_to_files(path_to_dataset: str)-> str:
+    """Reads paths to files in dataset
 
+    Args:
+        path_to_dataset (str): Path to source
+
+    Returns:
+        str: List of paths to files
+    """
     paths_to_files = list()
 
     for folder_num in range(1, 6):
@@ -126,8 +157,13 @@ def get_paths_to_files(path_to_dataset):
     return paths_to_files
 
 
-def write_as_csv(path_to_dataset, paths_to_files):
+def write_as_csv(path_to_dataset: str, paths_to_files: str):
+    """Writes all data as CSV
 
+    Args:
+        path_to_dataset (str): Path to surce
+        paths_to_files (str): Paths to files
+    """
     with open("dataset_csv_third.csv", "w+", encoding='utf-8', newline='') as file:
         csv_file = csv.writer(file, delimiter=';')
         csv_file.writerow(["Absolute path", "Relative path", "Class"])
